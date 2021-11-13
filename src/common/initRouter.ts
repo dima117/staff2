@@ -20,7 +20,7 @@ export const routesConfig: RoutesConfiguration = {
     },
 };
 
-export function initRouter(config: RoutesConfiguration) {
+export function initRouter(config: RoutesConfiguration, basePath?: string) {
     const routes: Route<unknown>[] = Object.keys(config).map(
         (route: string): Route<unknown> => ({
             name: route,
@@ -29,10 +29,11 @@ export function initRouter(config: RoutesConfiguration) {
     );
 
     const router = createRouter(routes, {
+        queryParamsMode: 'loose',
         trailingSlashMode: 'always',
         defaultRoute: '404',
     });
 
-    router.usePlugin(browserPlugin());
+    router.usePlugin(browserPlugin({ base: basePath }));
     return router;
 }

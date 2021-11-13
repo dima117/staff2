@@ -26,6 +26,7 @@
         "@types/react-helmet": "^6.1.4",
         "hbs": "^4.1.2",
         "react-helmet": "^6.1.0",
+        "react-router5": "^8.0.1",
         "reflect-metadata": "^0.1.13",
         "rimraf": "^3.0.2",
         "router5": "^8.0.1",

@@ -1,36 +1,35 @@
-import React from 'react';
 import { Controller, Get, Req, Res } from '@nestjs/common';
 import { renderToString } from 'react-dom/server';
 import { Request, Response } from 'express';
-import { initRouter, routesConfig } from 'src/common/initRouter';
+import { initRouter, routesConfig } from '../common/initRouter';
 import { AppService } from './app.service';
 import { Helmet } from 'react-helmet';
+import { initApplication } from '../pages';
 
-const routes = Object.keys(routesConfig);
-
-@Controller(routes)
+@Controller('*')
 export class AppController {
-    constructor(private readonly appService: AppService) {}
+    constructor(private readonly appService: AppService) { }
 
     @Get()
     index(@Req() req: Request, @Res() res: Response) {
-        const router = initRouter(routesConfig);
+        // https://router5.js.org/advanced/universal-routing#server-side-routing
+        const router = initRouter(routesConfig); // TODO: передавать basePath из конфига
 
         router.start(req.originalUrl, function done(error, state) {
             if (error) {
-                res.status(500).send(error);
-            } else {
-                const { Component } = routesConfig[state.name];
-
-                const html = renderToString(<Component />);
-                const helmet = Helmet.renderStatic();
-
-                const title = helmet.title.toString();
-                const meta = helmet.meta.toString();
-                const bodyAttributes = helmet.bodyAttributes.toString();
-
-                res.render('index', { html, title, meta, bodyAttributes });
+                res.status(404); // TODO: проверять код ошибки, чтобы выбрать код 404 или 500
             }
+
+            const application = initApplication(router);
+
+            const html = renderToString(application);
+            const helmet = Helmet.renderStatic();
+
+            const title = helmet.title.toString();
+            const meta = helmet.meta.toString();
+            const bodyAttributes = helmet.bodyAttributes.toString();
+
+            res.render('index', { html, title, meta, bodyAttributes });
         });
     }
 }
