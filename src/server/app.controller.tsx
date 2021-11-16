@@ -6,6 +6,13 @@ import { AppService } from './app.service';
 import { Helmet } from 'react-helmet';
 import { initApplication } from '../pages';
 
+import { join } from 'path';
+import { parseManifest } from '../common/formats/manifest';
+
+const manifestPath = join(process.cwd(), 'public', 'assets-manifest.json');
+const manifestJson = require(manifestPath);
+const manifest = parseManifest(manifestJson); // TODO: убрать в модуль
+
 @Controller('*')
 export class AppController {
     constructor(private readonly appService: AppService) { }
@@ -29,7 +36,9 @@ export class AppController {
             const meta = helmet.meta.toString();
             const bodyAttributes = helmet.bodyAttributes.toString();
 
-            res.render('index', { html, title, meta, bodyAttributes });
+            const { assets } = manifest.entrypoints.index;
+
+            res.render('index', { html, title, meta, bodyAttributes, assets });
         });
     }
 }

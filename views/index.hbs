@@ -9,6 +9,9 @@
 
 <body {{{bodyAttributes}}}>
     <div id="root">{{{html}}}</div>
+    {{#each assets.js}}
+    <script src="/{{{this}}}"></script>
+    {{/each}}
 </body>
 
 </html>

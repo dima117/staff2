@@ -43,6 +43,9 @@ export class Application extends PureComponent<ApplicationProps> {
         return (
             <div>
                 {this.renderContent()}
+                <footer>
+                    <button onClick={() => alert('it works')}>Click me</button>
+                </footer>
             </div>
         );
     }
