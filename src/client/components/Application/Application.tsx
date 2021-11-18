@@ -27,12 +27,15 @@ export class Application extends PureComponent<ApplicationProps> {
         }
 
         if (this.props.route) {
-            const obj = routesConfig[this.props.route.name];
+            const Component = routesConfig[this.props.route.name].loadComponent();
 
-            if (obj) {
-                const { Component } = obj;
-
-                return <Component />;
+            if (Component instanceof Promise) {
+                Component.then(() => {
+                    this.forceUpdate();
+                });
+                return null;
+            } else {
+                return <Component />
             }
         }
 
@@ -51,7 +54,7 @@ export class Application extends PureComponent<ApplicationProps> {
     }
 }
 
-export const ApplicationContainer: React.FC = props => {
+export const ApplicationContainer: React.FC = () => {
     const route = useRoute();
 
     return <Application route={route.route} />

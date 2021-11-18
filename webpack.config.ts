@@ -16,10 +16,11 @@ const config: webpack.Configuration = {
     module: {
         rules: [
             {
+                // TODO: вернуть обратно ts-loader, а через babel обрабатывать только импорты
                 test: /\.tsx?$/,
                 exclude: /node_modules/,
                 use: {
-                    loader: 'ts-loader', // TODO: отдельный typecheck
+                    loader: 'babel-loader', // TODO: отдельный typecheck
                 },
             },
         ]
@@ -29,6 +30,17 @@ const config: webpack.Configuration = {
             entrypoints: true,
         }),
     ],
+    optimization: {
+        chunkIds: 'named',
+        splitChunks: {
+            cacheGroups: {
+                vendor: {
+                    test: /[\\/]node_modules[\\/]/,
+                    name: 'vendor',
+                }
+            }
+        },
+    },
     devtool: 'source-map',  // TODO: ENV DEV
     resolve: {
         extensions: ['.ts', '.tsx', '.js'],

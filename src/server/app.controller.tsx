@@ -22,10 +22,12 @@ export class AppController {
         // https://router5.js.org/advanced/universal-routing#server-side-routing
         const router = initRouter(routesConfig); // TODO: передавать basePath из конфига
 
-        router.start(req.originalUrl, function done(error, state) {
+        router.start(req.originalUrl, async function done(error, state) {
             if (error) {
                 res.status(404); // TODO: проверять код ошибки, чтобы выбрать код 404 или 500
             }
+
+            await routesConfig[state.name].loadComponent();
 
             const application = initApplication(router);
 
