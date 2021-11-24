@@ -29,12 +29,17 @@
         "hbs": "^4.1.2",
         "io-ts": "^2.2.16",
         "react-helmet": "^6.1.0",
+        "react-redux": "^7.2.6",
         "react-router5": "^8.0.1",
+        "redux": "^4.1.2",
+        "redux-dynamic-modules": "^5.2.3",
+        "redux-dynamic-modules-observable": "^5.2.3",
+        "redux-observable": "^2.0.0",
         "reflect-metadata": "^0.1.13",
         "rimraf": "^3.0.2",
         "router5": "^8.0.1",
         "router5-plugin-browser": "^8.0.1",
-        "rxjs": "^7.2.0"
+        "rxjs": "^7.4.0"
     },
     "devDependencies": {
         "@babel/core": "^7.16.0",
