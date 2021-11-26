@@ -27,7 +27,11 @@ export class AppController {
                 res.status(404); // TODO: проверять код ошибки, чтобы выбрать код 404 или 500
             }
 
-            await routesConfig[state.name].loadComponent();
+            const module = routesConfig[state?.name];
+
+            if (module) {
+                await module.loadComponent();
+            }
 
             const application = initApplication(router);
 

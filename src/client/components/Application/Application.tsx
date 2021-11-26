@@ -23,7 +23,7 @@ export class Application extends PureComponent<ApplicationProps> {
     renderContent(): ReactNode {
         if (this.state.hasError) {
             // ошибка внутри страницы
-            return <div>client error</div>;
+            return <h1>client error</h1>;
         }
 
         if (this.props.route) {
@@ -39,7 +39,7 @@ export class Application extends PureComponent<ApplicationProps> {
             }
         }
 
-        return <div>404</div>;
+        return <h1>404</h1>;
     }
 
     render() {

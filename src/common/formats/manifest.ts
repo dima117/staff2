@@ -23,4 +23,4 @@ export const parseManifest = (obj: unknown): Manifest => {
     }
 
     throw new Error(d.draw(res.left));
-}
+};
