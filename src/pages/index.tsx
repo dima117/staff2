@@ -1,4 +1,3 @@
-import React from 'react';
 import { Provider } from 'react-redux';
 import { RouterProvider } from 'react-router5';
 import { Router } from 'router5';

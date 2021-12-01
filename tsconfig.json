@@ -1,7 +1,7 @@
 {
     "compilerOptions": {
         "module": "commonjs",
-        "declaration": true,
+        "declaration": false,
         "removeComments": true,
         "emitDecoratorMetadata": true,
         "experimentalDecorators": true,
@@ -14,7 +14,7 @@
         "skipLibCheck": true,
         "forceConsistentCasingInFileNames": false,
         "moduleResolution": "node",
-        "jsx": "react",
+        "jsx": "react-jsx",
 
         /* Strict Type-Checking Options */
         "strict": true,                                 /* Enable all strict type-checking options. */

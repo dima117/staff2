@@ -6,5 +6,8 @@
         "dist",
         "**/*spec.ts"
     ],
-    "compilerOptions": {}
+    "compilerOptions": {
+        "importHelpers": true,
+        "module": "esnext"
+    }
 }

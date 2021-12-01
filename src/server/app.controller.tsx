@@ -7,7 +7,7 @@ import { join } from 'path';
 import { initRouter, RoutesConfiguration } from 'src/common/initRouter';
 import { parseManifest } from 'src/common/formats/manifest';
 import { configureRoutes } from 'src/pages/routes';
-import { initApplication } from 'src/pages';
+import { initApplication } from '../pages';
 
 const manifestPath = join(process.cwd(), 'public', 'assets-manifest.json');
 const manifestJson = require(manifestPath);
@@ -16,7 +16,7 @@ const manifest = parseManifest(manifestJson); // TODO: убрать в моду�
 const routesConfig = new RoutesConfiguration();
 configureRoutes(routesConfig);
 
-@Controller('/page*') // TODO: починить звездочку
+@Controller('*') // TODO: починить звездочку
 export class AppController {
     constructor() { }
 
