@@ -1,37 +1,47 @@
 import React from 'react';
-import { createRouter, Route } from 'router5';
+import { createRouter, Route, State } from 'router5';
 import browserPlugin from 'router5-plugin-browser';
-import { Routes } from 'src/pages/routes';
+import { Routes } from 'src/pages/routes'; // TODO: убрать зависимость от pages
 
 export interface AppModule {
     loadComponent: () => React.ComponentType | Promise<React.ComponentType>;
 }
 
-export type RoutesConfiguration = Record<string, AppModule>;
+export class RoutesConfiguration {
 
-const cache: Record<string, React.ComponentType> = {};
-export const routesConfig: RoutesConfiguration = {};
+    readonly routes: Routes[] = [];
+    private modules: Record<string, AppModule> = {};
+    private cache: Record<string, React.ComponentType> = {};
 
-function addRoute(route: Routes, loader: () => Promise<React.ComponentType>) {
-    // TODO: вынести в класс
-    routesConfig[route] = {
-        loadComponent: () => {
-            if (cache[route]) {
-                return cache[route];
-            }
-
-            return loader().then(obj => cache[route] = obj);
+    addRoute(route: Routes, loader: () => Promise<React.ComponentType>) {
+        if (this.modules[route]) {
+            throw new Error(`duplicate route: ${route}`)
         }
+
+        this.routes.push(route);
+        this.modules[route] = {
+            loadComponent: () => {
+                return this.cache[route] || loader().then(obj => this.cache[route] = obj);
+            }
+        }
+    }
+
+    loadComponent(state?: State): React.ComponentType | Promise<React.ComponentType> | undefined {
+        if (state?.name) {
+            const module = this.modules[state?.name];
+
+            if (module) {
+                return module.loadComponent();
+            }
+        }
+
+        return undefined;
     }
 }
 
-// TODO: сделать в pages/routes фабрику конфига роутинга
-addRoute(Routes.page1, () => import('../pages/page1').then(m => m.Page1));
-addRoute(Routes.page2, () => import('../pages/page2').then(m => m.Page2));
-
 export function initRouter(config: RoutesConfiguration, basePath?: string) {
-    const routes: Route<unknown>[] = Object.keys(config).map(
-        (route: string): Route<unknown> => ({
+    const routes: Route[] = config.routes.map(
+        (route: string): Route => ({
             name: route,
             path: `/${route}`,
         }),

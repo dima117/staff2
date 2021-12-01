@@ -13,7 +13,7 @@ export const Page2: React.FC = () => {
                     <title>page22</title>
                 </Helmet>
                 <h1>page22</h1>
-                <Link routeName={Routes.page1} >Got to PAGE-1</Link>
+                <Link routeName={Routes.page1} >Go to PAGE-1</Link>
             </div>
         </DynamicModuleLoader>
     );

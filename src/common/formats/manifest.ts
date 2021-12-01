@@ -4,13 +4,13 @@ import { isRight } from 'fp-ts/lib/Either';
 
 const manifestDecoder = pipe(
     d.struct({
-        entrypoints: d.record(
-            d.struct({
+        entrypoints: d.struct({
+            index: d.struct({
                 assets: d.struct({
                     js: d.array(d.string),
                 }),
-            }),
-        ),
+            })
+        }),
     }),
 );
 
