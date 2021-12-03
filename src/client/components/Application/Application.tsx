@@ -2,19 +2,20 @@ import React, { PureComponent, ReactNode } from 'react';
 import { useRoute } from 'react-router5';
 import { State } from 'router5';
 
-import { routesConfig } from '../../../common/initRouter';
+import { RoutesConfiguration } from 'src/common/initRouter';
 
 export interface ApplicationState {
     hasError: boolean;
 }
 
 export interface ApplicationProps {
-    route: State;
+    route?: State;
+    routesConfig: RoutesConfiguration;
 }
 
 export class Application extends PureComponent<ApplicationProps> {
 
-    state: ApplicationState = { hasError: false };
+    override state: ApplicationState = { hasError: false };
 
     static getDerivedStateFromError() {
         return { hasError: true };
@@ -26,9 +27,13 @@ export class Application extends PureComponent<ApplicationProps> {
             return <h1>client error</h1>;
         }
 
-        if (this.props.route) {
-            const Component = routesConfig[this.props.route.name].loadComponent();
+        // TODO: добавить отображение 500/403
 
+        const { route, routesConfig } = this.props;
+
+        const Component = routesConfig.loadComponent(route);
+
+        if (Component) {
             if (Component instanceof Promise) {
                 Component.then(() => {
                     this.forceUpdate();
@@ -42,7 +47,7 @@ export class Application extends PureComponent<ApplicationProps> {
         return <h1>404</h1>;
     }
 
-    render() {
+    override render() {
         return (
             <div>
                 {this.renderContent()}
@@ -54,8 +59,9 @@ export class Application extends PureComponent<ApplicationProps> {
     }
 }
 
-export const ApplicationContainer: React.FC = () => {
+export const ApplicationContainer: React.FC<{ routesConfig: RoutesConfiguration }> = props => {
+    const { routesConfig } = props;
     const route = useRoute();
 
-    return <Application route={route.route} />
+    return <Application route={route.route} routesConfig={routesConfig} />
 }

@@ -16,11 +16,13 @@ const config: webpack.Configuration = {
     module: {
         rules: [
             {
-                // TODO: вернуть обратно ts-loader, а через babel обрабатывать только импорты
                 test: /\.tsx?$/,
                 exclude: /node_modules/,
                 use: {
-                    loader: 'babel-loader', // TODO: отдельный typecheck
+                    loader: 'ts-loader',
+                    options: {
+                        configFile: 'tsconfig.client.json',
+                    }
                 },
             },
         ]

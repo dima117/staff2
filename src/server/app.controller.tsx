@@ -1,21 +1,24 @@
 import { Controller, Get, Req, Res } from '@nestjs/common';
 import { renderToString } from 'react-dom/server';
 import { Request, Response } from 'express';
-import { initRouter, routesConfig } from '../common/initRouter';
-import { AppService } from './app.service';
 import { Helmet } from 'react-helmet';
-import { initApplication } from '../pages';
-
 import { join } from 'path';
-import { parseManifest } from '../common/formats/manifest';
+
+import { initRouter, RoutesConfiguration } from 'src/common/initRouter';
+import { parseManifest } from 'src/common/formats/manifest';
+import { configureRoutes } from 'src/pages/routes';
+import { initApplication } from '../pages';
 
 const manifestPath = join(process.cwd(), 'public', 'assets-manifest.json');
 const manifestJson = require(manifestPath);
 const manifest = parseManifest(manifestJson); // TODO: убрать в модуль
 
-@Controller('*')
+const routesConfig = new RoutesConfiguration();
+configureRoutes(routesConfig);
+
+@Controller('*') // TODO: починить звездочку
 export class AppController {
-    constructor(private readonly appService: AppService) { }
+    constructor() { }
 
     @Get()
     index(@Req() req: Request, @Res() res: Response) {
@@ -27,13 +30,10 @@ export class AppController {
                 res.status(404); // TODO: проверять код ошибки, чтобы выбрать код 404 или 500
             }
 
-            const module = routesConfig[state?.name];
+            // предзагружаем страничный компонент
+            await routesConfig.loadComponent(state);
 
-            if (module) {
-                await module.loadComponent();
-            }
-
-            const application = initApplication(router);
+            const application = initApplication(router, routesConfig);
 
             const html = renderToString(application);
             const helmet = Helmet.renderStatic();
@@ -42,6 +42,7 @@ export class AppController {
             const meta = helmet.meta.toString();
             const bodyAttributes = helmet.bodyAttributes.toString();
 
+            // TODO: сейчас подключается только index — возможно, стоит руками подключать index, vendor и переводы
             const { assets } = manifest.entrypoints.index;
 
             res.render('index', { html, title, meta, bodyAttributes, assets });
