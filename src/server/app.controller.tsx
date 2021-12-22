@@ -1,4 +1,4 @@
-import { Controller, Get, Req, Res } from '@nestjs/common';
+import { Controller, Get, Param, Query, Req, Res } from '@nestjs/common';
 import { renderToString } from 'react-dom/server';
 import { Request, Response } from 'express';
 import { Helmet } from 'react-helmet';
@@ -18,7 +18,7 @@ configureRoutes(routesConfig);
 
 @Controller('*') // TODO: починить звездочку
 export class AppController {
-    constructor() { }
+    constructor() {}
 
     @Get()
     index(@Req() req: Request, @Res() res: Response) {
@@ -32,9 +32,11 @@ export class AppController {
 
             // предзагружаем страничный компонент
             await routesConfig.loadComponent(state);
+            const moduleData = await Promise.resolve({ key: 'vakue' });
 
             const application = initApplication(router, routesConfig);
 
+            // синхронная часть кода, нельзя await
             const html = renderToString(application);
             const helmet = Helmet.renderStatic();
 

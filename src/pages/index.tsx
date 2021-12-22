@@ -6,13 +6,20 @@ import { initStore } from 'src/common/initStore';
 import { ApplicationContainer } from '../client/components/Application/Application';
 
 // TODO: кажется, этот файл нужно перенести в common
-export function initApplication(router: Router, routesConfig: RoutesConfiguration) {
+export function initApplication(
+    router: Router,
+    routesConfig: RoutesConfiguration,
+    preloadedData: unknown,
+) {
     const store = initStore({});
 
     const application = (
         <RouterProvider router={router}>
             <Provider store={store}>
-                <ApplicationContainer routesConfig={routesConfig} />
+                <ApplicationContainer
+                    routesConfig={routesConfig}
+                    preloadedData={preloadedData}
+                />
             </Provider>
         </RouterProvider>
     );

@@ -15,11 +15,11 @@ export const stubEpic: Epic<AnyAction, AnyAction, Page1State> = (action$) =>
         mergeMapTo(EMPTY),
     );
 
-export function getPage1Module(): IEpicModule<Page1State> {
+export function getPage1Module(initalState): IEpicModule<Page1State> {
     return {
         id: 'page1-module',
         reducerMap: {
-            count: (state = 0) => state + 1,
+            count: (state = initalState) => state + 1,
         },
         epics: [stubEpic],
         // Actions to fire when this module is added/removed
